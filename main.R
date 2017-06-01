@@ -2,6 +2,7 @@
 options(stringsAsFactors = F)
 
 # 以一般分詞方式確認詞庫的效果 實際分析或許用關鍵字取得方式比較好
+library(readr)
 library(text2vec)
 library(jiebaR)
 library(stats)
@@ -16,7 +17,7 @@ new_user_word(seg, 'CWT')
 new_user_word(seg, '工商')
 new_user_word(seg, '手滑')
 
-data = read.csv('data.csv')
+data = read_csv('csv/data.csv')
 
 contents = data$content
 rm(data)
