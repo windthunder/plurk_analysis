@@ -12,8 +12,7 @@ library(stringr)
 seg = worker(bylines = TRUE, dict = "./dict/dict_zhtw.txt", stop_word = "./dict/stop_words.utf8.txt")
 
 # set user dictionary
-new_user_word(seg, 'FF')
-new_user_word(seg, 'CWT')
+new_user_word(seg, '場次名')
 new_user_word(seg, '工商')
 new_user_word(seg, '手滑')
 
@@ -26,8 +25,7 @@ rm(data)
 # clear html tag
 contents = gsub("<.*?>", " ", contents)
 # 清除 wwwww 這個特殊詞
-contents = gsub("w+$", "", contents, ignore.case = TRUE)
-contents = gsub("^w+", "", contents, ignore.case = TRUE)
+contents = gsub("w{2,}", "", contents, ignore.case = TRUE)
 # 清除 xd 這個特殊詞
 contents = gsub("xd+", "", contents, ignore.case = TRUE)
 # 清除從頭到尾都沒有中文的內容
@@ -35,8 +33,30 @@ contents = gsub("^[^\u4E00-\u9FA5]*$", "", contents)
 # 清理掉被篩選掉完全為空的條目
 contents = contents[contents!=""]
 
+
 # try just get content has 'FF' or 'CWT'
 contents = contents[grepl('FF', contents, ignore.case = TRUE) | grepl('CWT', contents, ignore.case = TRUE)]
+
+# TODO: 分詞前處理
+
+# 將場次名的標準結構取代為「場次名」這個字 以統一場次名混亂的問題
+# FFK\d{2}
+# FF\d{2}
+# FFK
+# FF
+# CWTT\d{2}
+# CWTK\d{2}
+# CWT\d{2}
+# CWTT
+# CWTK
+contents = gsub("\bFFK\d*\b", "場次名", contents)
+contents = gsub("\bFF\d*\b", "場次名", contents)
+
+contents = gsub("\bCWTT\d*\b", "場次名", contents)
+contents = gsub("\bCWTK\d*\b", "場次名", contents)
+contents = gsub("\bCWT\d*\b", "場次名", contents)
+
+
 
 # 將英文部份先拋出去 避免jieba的英文分詞問題
 eng_cut = str_match_all(contents, '[A-z]{2,}')

@@ -8,8 +8,7 @@ rm(data)
 # clear html tag
 contents = gsub("<.*?>", " ", contents)
 # 清除 wwwww 這個特殊詞
-contents = gsub("w+$", "", contents, ignore.case = TRUE)
-contents = gsub("^w+", "", contents, ignore.case = TRUE)
+contents = gsub("w{2,}", "", contents, ignore.case = TRUE)
 # 清除 xd 這個特殊詞
 contents = gsub("xd+", "", contents, ignore.case = TRUE)
 # 清除從頭到尾都沒有中文的內容
@@ -18,7 +17,7 @@ contents = gsub("^[^\u4E00-\u9FA5]*$", "", contents)
 contents = contents[contents!=""]
 
 # try just get content has 'FF' or 'CWT'
-contents = contents[grepl('FF', contents, ignore.case = TRUE) | grepl('CWT', contents, ignore.case = TRUE)]
+contents = contents[grepl('(^|[^a-zA-Z])*FF\\d*([^a-zA-Z]|$)', contents, ignore.case = TRUE) | grepl('(^|[^a-zA-Z])*CWT(T|K)*\\d*([^a-zA-Z]|$)', contents, ignore.case = TRUE)]
 
 contents = trimws(contents)
 
