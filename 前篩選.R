@@ -1,11 +1,12 @@
 library(readr)
 data = read_csv('csv/data.csv')
 
-contents = data$content
+content = data$content
+pid = data$pid
 rm(data)
 
 # clear data
-contents = lapply(contents, function(x){
+content = lapply(content, function(x){
   # clear html tag
   x = gsub("<.*?>", " ", x)
   # 清除 wwwww 這個特殊詞
@@ -19,16 +20,20 @@ contents = lapply(contents, function(x){
 })
 
 # 清理掉被篩選掉完全為空的條目
-contents = contents[contents!=""]
+check = content!=""
+content = content[check]
+pid = pid[check]
 
 # try just get content has 'FF' or 'CWT'
-contents = contents[grepl('(^|[^a-zA-Z])*FF\\d*([^a-zA-Z]|$)', contents, ignore.case = TRUE) | grepl('(^|[^a-zA-Z])*CWT(T|K)*\\d*([^a-zA-Z]|$)', contents, ignore.case = TRUE)]
+check = grepl('(^|[^a-zA-Z])*FF\\d*([^a-zA-Z]|$)', content, ignore.case = TRUE) | grepl('(^|[^a-zA-Z])*CWT(T|K)*\\d*([^a-zA-Z]|$)', content, ignore.case = TRUE)
+content = content[check]
+pid = pid[check]
 
-contents = trimws(contents)
+content = trimws(content)
 
-content = contents
+content = as.data.frame(content, stringsAsFactors = F)
+pid = as.data.frame(pid, stringsAsFactors = F)
 
-write_csv(as.data.frame(content, stringsAsFactors = F), 'csv/subdata.csv')
+data = cbind(pid, content)
 
-rm(contents)
-rm(content)
+write_csv(data, 'csv/subdata.csv')
