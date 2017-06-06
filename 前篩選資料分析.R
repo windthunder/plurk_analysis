@@ -14,9 +14,9 @@ seg = worker(bylines = TRUE, dict = "./dict/dict_zhtw.txt", stop_word = "./dict/
 #設定包含特殊詞的分詞器
 seg2 = worker(bylines = TRUE, dict = "./dict/dict_zhtw.txt", stop_word = "./dict/stop_words.utf8.txt")
 
-keywords_seg = worker("keywords", topn = 5)
-
 new_user_word(seg2, readLines('tags/handmade_tags.txt', encoding = 'UTF-8'))
+
+keywords_seg = worker("keywords", topn = 5)
 
 # 參考用函數
 get = function(index){
